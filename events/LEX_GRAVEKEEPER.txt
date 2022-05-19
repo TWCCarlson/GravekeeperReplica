@@ -1,0 +1,39 @@
+namespace = lex_gravekeeper
+
+# Event which generates and initializes the Danann system
+country_event = {
+    # Event ID for calling elsewhere in scripts
+    id = lex_gravekeeper.1
+
+    title = example.1.name
+    desc = example.1.desc
+    picture = GFX_evt_exploding_ship
+    # Lag reducer, otherwise the event conditions are checked every day
+    # Can use mean_time_to_happen as well.
+    # Also can use on_actions to check the event when certain things occur
+    trigger = { always = no }
+
+    immediate = {
+        # Want to spawn the system randomly, near the edge of the galaxy (for now)
+        random_system = {
+            # Limit the selection of random systems to rim systems
+            limit = {
+                is_rim_system = yes
+            }
+            # After randomly selecting from the limited pool, spawn the system a distance away from that system
+            spawn_system = {
+                min_distance = 20
+                max_distance = 40
+                direction = rimwards
+                hyperlane = yes
+                initializer = "LEX_GRAVEYARD"
+            }
+        }
+    }
+
+    option = {
+        name = "xxx"
+        custom_tooltip = "yyy"
+    }
+
+}

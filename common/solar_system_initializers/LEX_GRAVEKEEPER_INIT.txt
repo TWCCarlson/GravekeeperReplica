@@ -1,0 +1,30 @@
+# Used when generating the system for the gravekeeper events
+LEX_GRAVEYARD = {
+	# System name
+	name = "Danann"
+	# This governs the appearance of the system on the galaxy-level map
+	class =  "sc_f"
+	# Only want this system to exist one time per galaxy
+	# Calling the event will skip generating the planet if this is set
+	max_instances = 1
+	
+	# Flags
+	# Global flags which can be used for scoping so long as they are kept unique
+	flags = {
+		# LEX flags
+		# Make it identifiable when searching systems
+		LEX_GRAVEYARD_SYSTEM
+
+		# Vanilla flags
+		# Prevent random vanilla wanderings (?)
+		hostile_system
+	}
+
+
+	asteroid_belt = {
+		type = rocky_asteroid_belt
+		radius = 80
+	}
+
+	
+}

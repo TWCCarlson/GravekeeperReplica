@@ -1,0 +1,32 @@
+#################################################
+# EVENT ACCESS MENU
+#################################################
+
+# Global value that can be referenced by @<var>
+@EdictPerpetual = -1
+
+lex_menu = {
+    # Time in days that the edict is active
+    length = 0
+
+    # Display icon localisation
+    icon = "GFX_edict_type_policy"
+
+    # The effect of the edict on activation, not applied repeatedly like modifiers
+    # Usually for triggering an event
+    effect = {
+        country_event = {
+            id = war_in_heaven.2
+        }
+    }
+
+    # Can be seen if conditions are met
+    potential = {
+        # https://github.com/OldEnt/stellaris-triggers-modifiers-effects-list/blob/master/3.4.2_game_triggers.log
+        is_ai = no
+    }
+    # Just in case
+    ai_weight = {
+        weight = 0
+    }
+}
