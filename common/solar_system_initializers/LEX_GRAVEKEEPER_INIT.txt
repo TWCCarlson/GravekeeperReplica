@@ -20,11 +20,550 @@ LEX_GRAVEYARD = {
 		hostile_system
 	}
 
-
+	### System Decoration
+	# Asteroid Belt centered
 	asteroid_belt = {
+		# Asteroid belt types are found in /common/asteroid_belts
 		type = rocky_asteroid_belt
 		radius = 80
 	}
 
-	
+	# Create the system star
+	planet = {
+		class = "pc_f_star"
+		orbit_distance = 0
+		orbit_angle = 0
+		size = 20
+		
+		# On generation, do the following
+		init_effect = {
+			# Save a flag for pathfinding later
+			save_global_event_target_as = bwm_grave_star
+			# No anomalies here
+			prevent_anomaly = yes
+		
+			# Ambient objects are kept in /common/ambient_objects
+			# This is the cloud of debris near the sun, with the dead swarm queen 
+			create_ambient_object = {
+				type = "LEX_GRAVEYARD_AFTERMATH_AMB_OBJ"
+				location = THIS
+			}
+			
+			# Ambient objects are kept in /common/ambient_objects
+			# This is the destroyed station near the sun
+			create_ambient_object = {
+				type = "LEX_GRAVEYARD_INACTIVE_STATION_AMB_OBJ"
+				location = THIS
+			}
+			# Randomize the orbit position (easy because it is just one object, harder with batches)
+			last_created_ambient_object = {
+				set_location = {
+					# Put it relative to the scope of the planet (PREV), not the ambient object (THIS)
+					target = PREV
+					# In a 20 unit radius around the current scope
+					distance = 20
+					# With a random angle
+					angle = 200
+				}
+			}
+		}
+	}
+
+	# Create a few planets for the gravekeeper to tend
+	# Each planet creation position is considered to be a movement from the last position
+	# This is annoying
+	# Use change_orbit and then don't change it
+	change_orbit = 80
+	planet = {
+		count = 1
+		# Spawn a random asteroid, takes care of naming
+		# Could also use class = random_asteroid
+		class = "pc_asteroid"
+		# Choose the orbit distance and angle
+		orbit_distance = 0
+		# North
+		orbit_angle = 60
+
+		# Flag the object for ease of reference later
+		flags = {
+			LEX_GRAVEKEEPER_PATROL_1
+		}
+
+		# On initialization, trigger effects
+		init_effect = {
+			prevent_anomaly = yes
+		}
+	}
+	planet = {
+		count = 1
+		# Spawn a random asteroid, takes care of naming
+		class = "pc_asteroid"
+		# Choose the orbit distance and angle
+		orbit_distance = 0
+		# West
+		orbit_angle = 100
+
+		# Flag the object for ease of reference later
+		flags = {
+			LEX_GRAVEKEEPER_PATROL_2
+		}
+
+		# On initialization, trigger effects
+		init_effect = {
+			prevent_anomaly = yes
+		}
+	}
+	planet = {
+		count = 1
+		# Spawn a random asteroid, takes care of naming
+		class = "pc_asteroid"
+		# Choose the orbit distance and angle
+		orbit_distance = 0
+		# East
+		orbit_angle = 65
+
+		# Flag the object for ease of reference later
+		flags = {
+			LEX_GRAVEKEEPER_PATROL_3
+		}
+
+		# On initialization, trigger effects
+		init_effect = {
+			prevent_anomaly = yes
+		}
+	}
+	# Make one a barren planet with a station and a moon
+	planet = {
+		class = "pc_barren"
+		name = "Falias I"
+		entity = "nuked_planet_01_entity"
+		orbit_distance = 0
+		orbit_angle = 90
+		has_ring = yes
+		size = 13
+
+		flags = {
+			LEX_GRAVEKEEPER_PATROL_4
+		}
+
+		init_effect = {
+			prevent_anomaly = yes
+
+			# Create the space station
+			create_ambient_object = {
+				type = "abandoned_starbase_01_object"
+			}
+			last_created_ambient_object = {
+				set_location = {
+					target = PREV
+					distance = 8
+					angle = 60
+				}
+			}
+		}
+	}
+
+	# Pollute the system
+	init_effect = {
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+	    create_ambient_object = {
+			type = "dead_swarm_small_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "dead_swarm_large_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "dead_swarm_large_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "dead_swarm_large_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "dead_swarm_large_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "dead_swarm_large_object"
+			location = solar_system
+		}	
+		create_ambient_object = {
+			type = "dead_swarm_large_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "dead_swarm_large_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "dead_swarm_large_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "dead_swarm_large_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "dead_swarm_large_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "dead_swarm_large_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "dead_swarm_large_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "dead_swarm_large_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "dead_swarm_large_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "dead_swarm_large_object"
+			location = solar_system
+		}	
+		create_ambient_object = {
+			type = "dead_swarm_large_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "dead_swarm_large_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "dead_swarm_large_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "dead_swarm_large_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "dead_swarm_large_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "abandoned_ship_2_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "abandoned_ship_2_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "abandoned_ship_2_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "abandoned_ship_2_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "abandoned_ship_2_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "abandoned_ship_2_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "abandoned_ship_2_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "abandoned_ship_2_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "abandoned_ship_2_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "abandoned_ship_2_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "large_debris_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "large_debris_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "large_debris_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "large_debris_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "large_debris_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "medium_debris_01_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "medium_debris_01_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "medium_debris_01_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "medium_debris_01_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "medium_debris_01_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "medium_debris_02_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "medium_debris_02_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "medium_debris_02_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "medium_debris_02_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "medium_debris_02_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "small_debris_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "small_debris_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "small_debris_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "small_debris_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "small_debris_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "small_debris_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "small_debris_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "small_debris_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "small_debris_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "small_debris_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "small_debris_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "small_debris_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "small_debris_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "small_debris_object"
+			location = solar_system
+		}
+		create_ambient_object = {
+			type = "small_debris_object"
+			location = solar_system
+		}
+	}
 }

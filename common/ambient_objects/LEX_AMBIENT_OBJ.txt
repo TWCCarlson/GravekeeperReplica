@@ -1,0 +1,17 @@
+ambient_object = {
+	# Name for access in scripts
+	name = "LEX_GRAVEYARD_AFTERMATH_AMB_OBJ"
+	# Name of entity class
+	entity = "LEX_GRAVEYARD_AFTERMATH_ENTITY"
+	# Can be clicked
+	selectable = no
+	# Is labeled
+	show_name = no
+}
+
+ambient_object = {
+	name = "LEX_GRAVEYARD_INACTIVE_STATION_AMB_OBJ"
+	entity = "LEX_GRAVEYARD_INACTIVE_STATION_ENTITY"
+	selectable = yes
+	show_name = yes
+}

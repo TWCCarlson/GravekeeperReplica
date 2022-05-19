@@ -1,0 +1,72 @@
+entity = {
+	# Name for access in object declarations
+	name = "LEX_GRAVEYARD_AFTERMATH_ENTITY"
+
+	# Locators provide an attachment point for an entity
+	# Locator names do not need to be unique, will all receive the same entity attachment rule
+	# Position describes the cartesian location where
+	# position = { +L/-R +Up/-Down +Rear/-Front } 
+    # rotation = { Turn -Dive/+Pitch -LRoll/+RRoll }
+    # scale = X.X 
+	locator = { name = "debris_large"			position = { 0 30 0 } }
+	
+	locator = { name = "ship_7" 				position = { -40 0 -30 } rotation = { 64 23 16 } }
+	locator = { name = "debris_medium_01"		position = { 50 25 30 } }
+	
+	locator = { name = "ship_6"					position = { 20 20 30 } rotation = { 60 10 -130 } }
+	locator = { name = "debris_medium_02"		position = { -10 -15 -10 } }
+	
+	locator = { name = "ship_5"					position = { -40 -25 -40 } rotation = { 56 1 25 } }
+	locator = { name = "debris_large"			position = { 0 0 0 } }
+	
+	locator = { name = "ship_4"					position = { 60 30 30 } rotation = { 165 6 18 } }
+	locator = { name = "debris_small"			position = { -60 -5 -60 } }
+	
+	locator = { name = "ship_3"					position = { -60 -30 -25 } rotation = { 20 -10 80 } }
+	locator = { name = "debris_medium_01"		position = { 90 15 50 } }
+	
+	locator = { name = "ship_2"					position = { 10 5 40 } rotation = { 19 63 175 } }
+	locator = { name = "debris_medium_02"		position = { -30 -25 -45 } }
+	
+	locator = { name = "ship_1"					position = { 4 -30 15 } rotation = { 184 27 18 } }
+	locator = { name = "debris_large"			position = { 0 -30 0 } }
+	
+	# Attach attaches an entity to a location
+	# Applies to all locators sharing a name
+	attach = { debris_small			= "debris_small_01_entity" }
+	attach = { debris_medium_01		= "debris_medium_01_entity" }
+	attach = { debris_medium_02		= "debris_medium_02_entity" }
+	attach = { debris_large			= "debris_large_01_entity" }
+	attach = { ship_7				= "swarm_02_queen_dead_entity" }
+	attach = { ship_6				= "swarm_01_warship_large_dead_entity" }
+	attach = { ship_5				= "swarm_01_warship_small_dead_entity" }
+	attach = { ship_4				= "swarm_01_warship_large_dead_entity" }
+	attach = { ship_3				= "swarm_01_warship_small_dead_entity" }
+	attach = { ship_2				= "swarm_01_warship_small_dead_entity" }
+	attach = { ship_1				= "abandoned_ship_destroyed_entity" }
+		
+	# ??
+	# Something for rendering maybe
+	cull_radius = 1000
+
+	# Scale up the whole batch evenly
+	scale = 1.0
+}
+
+entity = {
+	name = "LEX_GRAVEKEEPER_ENTITY"
+	# pdxmesh references an objectType stored in /gfx/models/ .gfx files
+	pdxmesh = "LEX_GRAVEKEEPER_MESH"
+	scale = 2.25
+}
+
+entity = {
+	name = "LEX_GRAVEYARD_INACTIVE_STATION_ENTITY"
+
+	locator = { name = "ship_flip" 	position = { 0 0 0 } rotation = { 8 4 12 } }
+		
+	attach = { ship_flip = "LEX_GRAVEKEEPER_ENTITY" }
+
+	scale = 1.0	
+}
+
