@@ -1,6 +1,7 @@
 #################################################
 # EVENT ACCESS MENU
 #################################################
+# File is named 99_ so that it shows up at the bottom of the edict list to not get in the way
 
 # Global value that can be referenced by @<var>
 @EdictPerpetual = -1
