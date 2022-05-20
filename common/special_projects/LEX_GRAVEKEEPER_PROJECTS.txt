@@ -1,0 +1,43 @@
+# Defines special projects for the gravekeeper event line
+# Documentation in vanilla files: /common/special_projects/documentation.txt
+special_project = {
+	# The key for enable_special_project to link to
+	key = "LEX_GRAVEKEEPER_REACTIVATION"
+	# Scope of the special project (ship/country)
+	event_scope = ship_event
+	# Time to complete the special project
+	days_to_research = 90
+	
+	# Requirements to do the project
+	requirements = {
+		# These automatically generate requirement localisations
+		leader = scientist
+		skill = 1
+		shipclass_science_ship = 1
+	}
+
+	# on_progress_25 = {
+	# 	ship_event = {
+	# 		id = lex_gravekeeper.10001
+	# 	}
+	# }
+
+	# on_progress_50 = {
+	# 	ship_event = {
+	# 		id = lex_gravekeeper.10002
+	# 	}
+	# }
+
+	# on_progress_75 = {
+	# 	ship_event = {
+	# 		id = lex_gravekeeper.10003
+	# 	}
+	# }
+
+	on_success = { 
+		# On completion, fire the next event in the sequence
+		ship_event = {
+			id = lex_gravekeeper.3
+		}
+	}
+}

@@ -1,0 +1,20 @@
+# LEX ON_ACTIONS
+# these lines add to the vanilla on_actions file
+# Remember that triggers are checked before any execution
+# This means things like lists can be "empty" if there are no valid events
+
+# Fires on the start of the game, mostly for speeding up debug
+# on_game_start has no scope, need the country version
+on_game_start_country = {
+	events = {
+		lex_gravekeeper.1
+	}
+}
+
+
+# The first time a country places a ship inside a system
+on_entering_system_first_time = {
+	events = {
+		lex_gravekeeper.2
+	}
+}

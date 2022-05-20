@@ -70,3 +70,18 @@ entity = {
 	scale = 1.0	
 }
 
+entity = {
+	name = "LEX_GRAVEKEEPER_HULL_SECTION_ENTITY"
+	pdxmesh = "LEX_GRAVEKEEPER_HULL_SECTION_MESH"
+	scale = 1
+	default_state = "idle"
+
+	state = {
+		name = "idle"
+		start_event = {
+			trigger_once = yes
+			sound = { soundeffect = "amb_fall_empire_station_01" }
+		}
+	}
+}
+

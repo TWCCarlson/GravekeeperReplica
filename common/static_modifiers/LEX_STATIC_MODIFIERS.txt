@@ -1,0 +1,5 @@
+LEX_GRAVEKEEPER_MODIFIER = {
+	ship_shield_mult = 0.8
+	ship_hull_mult = 0.8
+	damage_vs_country_type_swarm_mult = 1.0
+}

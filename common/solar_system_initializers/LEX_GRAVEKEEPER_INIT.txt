@@ -1,7 +1,7 @@
 # Used when generating the system for the gravekeeper events
 LEX_GRAVEYARD = {
 	# System name
-	name = "Danann"
+	name = "LEX_GRAVEYARD_SYSTEM_STAR"
 	# This governs the appearance of the system on the galaxy-level map
 	class =  "sc_f"
 	# Only want this system to exist one time per galaxy
@@ -38,7 +38,7 @@ LEX_GRAVEYARD = {
 		# On generation, do the following
 		init_effect = {
 			# Save a flag for pathfinding later
-			save_global_event_target_as = bwm_grave_star
+			save_global_event_target_as = LEX_GRAVEYARD_STAR
 			# No anomalies here
 			prevent_anomaly = yes
 		
@@ -50,13 +50,15 @@ LEX_GRAVEYARD = {
 			}
 			
 			# Ambient objects are kept in /common/ambient_objects
-			# This is the destroyed station near the sun
+			# This is the inactive gravekeeper station
 			create_ambient_object = {
 				type = "LEX_GRAVEYARD_INACTIVE_STATION_AMB_OBJ"
 				location = THIS
 			}
+
 			# Randomize the orbit position (easy because it is just one object, harder with batches)
 			last_created_ambient_object = {
+				save_global_event_target_as = LEX_GRAVEKEEPER_REACTIVATE_TARGET
 				set_location = {
 					# Put it relative to the scope of the planet (PREV), not the ambient object (THIS)
 					target = PREV
@@ -82,7 +84,7 @@ LEX_GRAVEYARD = {
 		# Choose the orbit distance and angle
 		orbit_distance = 0
 		# North
-		orbit_angle = 60
+		orbit_angle = random
 
 		# Flag the object for ease of reference later
 		flags = {
