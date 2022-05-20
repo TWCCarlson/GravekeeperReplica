@@ -72,7 +72,7 @@ LEX_GRAVEYARD = {
 	# Create a few planets for the gravekeeper to tend
 	# Each planet creation position is considered to be a movement from the last position
 	# This is annoying
-	# Use change_orbit and then don't change it
+	# Use change_orbit and then don't change it with orbit_distance != 0
 	change_orbit = 80
 	planet = {
 		count = 1
@@ -157,13 +157,14 @@ LEX_GRAVEYARD = {
 				set_location = {
 					target = PREV
 					distance = 8
-					angle = 60
+					angle = random	
 				}
 			}
 		}
 	}
 
 	# Pollute the system
+	# Without filling fields, Stellaris will randomly place objects within the location
 	init_effect = {
 	    create_ambient_object = {
 			type = "dead_swarm_small_object"

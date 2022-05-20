@@ -16,7 +16,7 @@ lex_menu = {
     # Usually for triggering an event
     effect = {
         country_event = {
-            id = war_in_heaven.2
+            id = lex_gravekeeper.1
         }
     }
 

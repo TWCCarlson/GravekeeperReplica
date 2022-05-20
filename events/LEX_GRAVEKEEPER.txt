@@ -5,13 +5,16 @@ country_event = {
     # Event ID for calling elsewhere in scripts
     id = lex_gravekeeper.1
 
-    title = example.1.name
-    desc = example.1.desc
-    picture = GFX_evt_exploding_ship
+    # Title and description localisation handlers
+    # Not used if hide_window = yes is set
+    hide_window = yes
+    title = "lex_gravekeeper.1.name"
+    desc = "lex_gravekeeper.1.desc"
+    picture = GFX_evt_space_station
     # Lag reducer, otherwise the event conditions are checked every day
     # Can use mean_time_to_happen as well.
     # Also can use on_actions to check the event when certain things occur
-    trigger = { always = no }
+    is_triggered_only = yes
 
     immediate = {
         # Want to spawn the system randomly, near the edge of the galaxy (for now)
@@ -31,9 +34,10 @@ country_event = {
         }
     }
 
-    option = {
-        name = "xxx"
-        custom_tooltip = "yyy"
-    }
-
+    # Event dialogue options
+    # Not used is hide_window = yes is set
+    # option = {
+    #     name = "xxx"
+    #     custom_tooltip = "yyy"
+    # }
 }
