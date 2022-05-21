@@ -207,6 +207,12 @@ ship_event = {
                     save_global_event_target_as = LEX_GRAVEKEEPER_REACTIVATION_LOCATION
                 }
             }
+            # Make an animation to spawn it in
+            last_created_fleet = {
+                bwm_effect_explosion_1 = yes
+                # Debug statement logs/game.log
+                print_scope_effect = yes
+            }
             # Remove the inactive station model
             event_target:LEX_GRAVEKEEPER_REACTIVATE_TARGET = { destroy_ambient_object = this }
         }
