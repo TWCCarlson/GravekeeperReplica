@@ -1,7 +1,7 @@
 # Used when generating the system for the gravekeeper events
 LEX_GRAVEYARD = {
 	# System name
-	name = "LEX_GRAVEYARD_SYSTEM_STAR"
+	name = "LEX_GRAVEYARD_SYSTEM"
 	# This governs the appearance of the system on the galaxy-level map
 	class =  "sc_f"
 	# Only want this system to exist one time per galaxy

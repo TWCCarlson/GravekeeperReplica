@@ -58,7 +58,7 @@ ship_event = {
     trigger = {
         FROM = {
             # This event should only fire in the graveyard system
-            has_star_flag = LEX_GRAVEYARD_SYSTEM
+            has_star_flag = LEX_GRAVEYARD_SYSTEM_STAR
         }
         NOT = {
             # Does not fire if the station is active
@@ -71,6 +71,7 @@ ship_event = {
             # Restrict it to only being used by players (?)
             is_ai = no
         }
+        
     }
 
     immediate = {
@@ -211,11 +212,80 @@ ship_event = {
             last_created_fleet = {
                 bwm_effect_explosion_1 = yes
                 # Debug statement logs/game.log
-                print_scope_effect = yes
+            }
+            # Alert every country in the galaxy to the gravekeeper's activation
+            every_country = {
+                establish_communications_no_message = event_target:LEX_GRAVEKEEPER_COUNTRY
             }
             # Remove the inactive station model
             event_target:LEX_GRAVEKEEPER_REACTIVATE_TARGET = { destroy_ambient_object = this }
+            # Trigger the powerup sequence for the station to become mobile
+            owner = {
+                country_event = { 
+                    id = lex_gravekeeper.100
+                    # days = 10
+                }
+            }
         }
+    }
+}
+
+# Middle step event to alert the science ship owner to the awakening
+country_event = {
+    id = lex_gravekeeper.100
+    title = "LEX_GRAVEKEEPER.100.name"
+    desc = "LEX_GRAVEKEEPER.100.desc"
+    picture = GFX_evt_sapient_AI
+    location = FROM
+
+    is_triggered_only = yes
+
+    option = {
+        name = "LEX_GRAVEKEEPER.100.afraid"
+        custom_tooltip = "LEX_GRAVEKEEPER.100.afraid.tooltip"
+        # Scientist realizes and becomes evasive
+        FROM.fleet = {
+            queue_actions = {
+                find_closest_system = {
+                    found_system = {
+                        move_to = this
+                    }   
+                }
+            }
+        }
+        hidden_effect = {
+            country_event = {
+                id = lex_gravekeeper.101
+                days = 45
+            }
+        }
+    }   
+}
+
+# 10 days later, the station is replaced by a ship, and becomes hostile
+# Middlestep event to instant-react to the activation and science ship escaping
+country_event = {
+    id = lex_gravekeeper.101
+    title = "LEX_GRAVEKEEPER.101.name"
+    desc = "LEX_GRAVEKEEPER.101.desc"
+    picture = GFX_evt_sapient_AI
+    show_sound = event_red_alert
+    location = FROM
+    
+    is_triggered_only = yes
+
+    immediate = {
+        every_country = {
+            limit = {
+                is_country_type = LEX_GRAVEKEEPER_COUNTRY_PASSIVE
+            }
+            set_country_type = LEX_GRAVEKEEPER_COUNTRY_AGGRESSIVE
+        }
+    }
+
+    option = {
+        name = "LEX_GRAVEKEEPER.101.run"
+        custom_tooltip = "LEX_GRAVEKEEPER.101.run.tooltip"
     }
 }
 
