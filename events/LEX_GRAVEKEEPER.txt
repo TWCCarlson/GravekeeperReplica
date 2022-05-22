@@ -58,7 +58,7 @@ ship_event = {
     trigger = {
         FROM = {
             # This event should only fire in the graveyard system
-            has_star_flag = LEX_GRAVEYARD_SYSTEM_STAR
+            has_star_flag = LEX_GRAVEYARD_SYSTEM
         }
         NOT = {
             # Does not fire if the station is active
@@ -262,8 +262,7 @@ country_event = {
     }   
 }
 
-# 10 days later, the station is replaced by a ship, and becomes hostile
-# Middlestep event to instant-react to the activation and science ship escaping
+# 45 days later, the station is replaced by a ship, and becomes hostile
 country_event = {
     id = lex_gravekeeper.101
     title = "LEX_GRAVEKEEPER.101.name"
@@ -286,6 +285,62 @@ country_event = {
     option = {
         name = "LEX_GRAVEKEEPER.101.run"
         custom_tooltip = "LEX_GRAVEKEEPER.101.run.tooltip"
+    }
+}
+
+# After the station is disabled (on_actions), the gravekeeper comes fully online
+ship_event = {
+    id = lex_gravekeeper.200
+    hide_window = yes
+
+	fire_only_once = yes
+    is_triggered_only = yes
+
+    # Ship needs to be the gravekeeper
+    trigger = {
+        is_ship_size = LEX_GRAVEKEEPER
+        OWNER = {
+            OR = {
+                is_country_type = LEX_GRAVEKEEPER_COUNTRY_PASSIVE
+                is_country_type = LEX_GRAVEKEEPER_COUNTRY_AGGRESSIVE
+            }
+            has_country_flag = LEX_GRAVEKEEPER_COUNTRY
+        }
+    }
+
+    immediate = {
+        create_fleet = {
+            name = "LEX_GRAVEKEEPER_AWAKENED"
+            settings = {
+                # Doesn't leave a corpse (?)
+                spawn_debris = no
+                # Marks the fleet as a Leviathan
+                is_boss = yes
+            }
+            # Effect executed on fleet creation
+            effect = {
+                # Assign the fleet to the gravekeeper country
+                set_owner = event_target:LEX_GRAVEKEEPER_COUNTRY
+                # Create the awakened gravekeeper
+                create_ship = {
+                    name = "LEX_GRAVEKEEPER_AWAKENED_SHIP_NAME"
+                    design = "LEX_GRAVEKEEPER_AWAKENED_SHIP_DESIGN"
+                    graphical_culture = "fallen_empire_04"
+                    prefix = no
+
+                    effect = {
+                        set_disable_at_health = 0.05
+                    }
+                }
+                set_location = event_target:LEX_GRAVEKEEPER_REACTIVATION_LOCATION
+                set_fleet_stance = aggressive
+                set_aggro_range_measure_from = self
+                set_aggro_range = 50
+				this.owner = {
+					set_country_flag = "GRAVEKEEPER_SLAIN"
+				}
+            }
+        }
     }
 }
 

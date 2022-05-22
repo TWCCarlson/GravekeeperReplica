@@ -18,3 +18,12 @@ on_entering_system_first_time = {
 		lex_gravekeeper.2
 	}
 }
+
+# When a ship is disabled, check these events
+# This = Ship
+# From = Disabler Ship
+on_ship_disabled = {
+	events = {
+		lex_gravekeeper.200
+	}
+}

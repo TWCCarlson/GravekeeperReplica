@@ -32,6 +32,25 @@ objectTypes = {
 		}
 	}
 
+	pdxmesh = {
+		name = "LEX_GRAVEKEEPER_AWAKENED_HULL_SECTION_MESH"
+		file = "gfx/models/ships/LEX_GRAVEKEEPER/bwm_lex_grave_awakened.mesh"
+		scale = 1.0
+		
+		animation = { id = "idle" type = "bwm_lex_grave_awakened_idle_animation" }
+		animation = { id = "opening" type = "bwm_lex_grave_awakened_opening_animation" }
+		# animation = { id = "opened" type = "bwm_lex_grave_awakened_open_animation" }
+		animation = { id = "closing" type = "bwm_lex_grave_awakened_closing_animation" }
+		animation = { id = "closed" type = "bwm_lex_grave_awakened_close_animation" }
 
+		meshsettings = {
+			name = "ship_shapeShape"
+			index = 0
+			texture_diffuse = "bwm_lex_grave_awakened_diffuse.dds"
+			texture_normal = "bwm_lex_grave_normal.dds"
+			texture_specular = "bwm_lex_grave_specular.dds"
+			shader = "PdxMeshShip"
+		}
+	}
 }
 
