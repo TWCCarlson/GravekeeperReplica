@@ -1,0 +1,2 @@
+﻿l_english:
+  LEX_GRAVEKEEPER_TRACKING_POINT.desc:0 "The Gravekeeper is §R[LEX_GRAVEKEEPER_CURRENT_LOCATION.sfex_jumpdrive_order_var_num_jumps_to_source_use_bypasses_no] systems§! away from its home. \n\n\nCurrently located in §H[LEX_GRAVEKEEPER_CURRENT_LOCATION.GetName]§!"

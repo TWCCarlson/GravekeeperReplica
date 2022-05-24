@@ -1,418 +1,594 @@
 namespace = lex_gravekeeper
-
 # Event which generates and initializes the Danann system
 country_event = {
-    # Event ID for calling elsewhere in scripts
-    id = lex_gravekeeper.1
-
-    # Title and description localisation handlers
-    # Not used if hide_window = yes is set
-    hide_window = yes
-    # title = "lex_gravekeeper.1.name"
-    # desc = "lex_gravekeeper.1.desc"
-    # picture = GFX_evt_space_station
-    # Lag reducer, otherwise the event conditions are checked every day
-    # Can use mean_time_to_happen as well.
-    # Also can use on_actions to check the event when certain things occur
-    is_triggered_only = yes
-
-    immediate = {
-        # Want to spawn the system randomly, near the edge of the galaxy (for now)
-        random_system = {
-            # Limit the selection of random systems to rim systems
-            limit = {
-                is_rim_system = yes
-            }
-            # After randomly selecting from the limited pool, spawn the system a distance away from that system
-            spawn_system = {
-                min_distance = 20
-                max_distance = 40
-                direction = rimwards
-                hyperlane = yes
-                initializer = "LEX_GRAVEYARD"
-            }
-        }
-    }
-
-    # Event dialogue options
-    # Not used is hide_window = yes is set
-    # option = {
-    #     name = "xxx"
-    #     custom_tooltip = "yyy"
-    # }
+	# Event ID for calling elsewhere in scripts
+	id = lex_gravekeeper.1
+	# Title and description localisation handlers
+	# Not used if hide_window = yes is set
+	hide_window = yes
+	# title = "lex_gravekeeper.1.name"
+	# desc = "lex_gravekeeper.1.desc"
+	# picture = GFX_evt_space_station
+	# Lag reducer, otherwise the event conditions are checked every day
+	# Can use mean_time_to_happen as well.
+	# Also can use on_actions to check the event when certain things occur
+	is_triggered_only = yes
+	immediate = {
+		# Want to spawn the system randomly, near the edge of the galaxy (for now)
+		random_system = {
+			# Limit the selection of random systems to rim systems
+			limit = {
+				is_rim_system = yes
+			}
+			# After randomly selecting from the limited pool, spawn the system a distance away from that system
+			spawn_system = {
+				min_distance = 20
+				max_distance = 40
+				direction = rimwards
+				hyperlane = yes
+				initializer = "LEX_GRAVEYARD"
+			}
+		}
+	}
+	# Event dialogue options
+	# Not used is hide_window = yes is set
+	# option = {
+	#     name = "xxx"
+	#     custom_tooltip = "yyy"
+	# }
 }
 
 # Event which fires when a ship enters the Danann system, per country
 # Present a story and a choice
 # Either the country can ignore the system, or try to activate the inert station
 ship_event = {
-    id = lex_gravekeeper.2
-    title = "lex_gravekeeper.2.name"
-    desc = "lex_gravekeeper.2.desc"
-    picture = GFX_evt_space_station
-    location = FROM
-
-    # Trigger comes from on_actions
-    is_triggered_only = yes
-
-    trigger = {
-        FROM = {
-            # This event should only fire in the graveyard system
-            has_star_flag = LEX_GRAVEYARD_SYSTEM
-        }
-        NOT = {
-            # Does not fire if the station is active
-            has_global_flag = LEX_GRAVEKEEPER_AWAKE
-        }
-        owner = {
-            # Does not fire if the country has found the gravekeeper before
-            # Might be redundant, can only enter a system for the first time once anyway
-            NOT = { has_country_flag = LEX_GRAVEYARD_ENCOUNTERED }
-            # Restrict it to only being used by players (?)
-            is_ai = no
-        }
-        
-    }
-
-    immediate = {
-        owner = {
-            # Designate the country as having found the gravekeeper system
-            set_country_flag = LEX_GRAVEYARD_ENCOUNTERED
-        }
-        # Probably want to conclude the event chain when I get around to that
-    }
-
-    option = {
-        name = "lex_gravekeeper.2.reactivate"
-        # This option places a special project on the station
-        # Uses the save_global_event_target in LEX_GRAVEKEEPER_INIT.txt
-        event_target:LEX_GRAVEKEEPER_REACTIVATE_TARGET = {
-            enable_special_project = {
-                # Special projects are defined in /common/special_projects
-                name = "LEX_GRAVEKEEPER_REACTIVATION"
-                location = THIS # points to the event_target
-                owner = ROOT    # makes it accessible to the root owner of the ship
-            }
-        }
-    }
+	id = lex_gravekeeper.2
+	title = "lex_gravekeeper.2.name"
+	desc = "lex_gravekeeper.2.desc"
+	picture = GFX_evt_ship_under_attack
+	location = FROM
+	# Trigger comes from on_actions
+	is_triggered_only = yes
+	trigger = {
+		FROM = {
+			# This event should only fire in the graveyard system
+			has_star_flag = LEX_GRAVEYARD_SYSTEM
+		}
+		NOT = {
+			# Does not fire if the station is active
+			has_global_flag = LEX_GRAVEKEEPER_AWAKE
+		}
+		owner = {
+			# Does not fire if the country has found the gravekeeper before
+			# Might be redundant, can only enter a system for the first time once anyway
+			NOT = {
+				has_country_flag = LEX_GRAVEYARD_ENCOUNTERED
+			}
+			# Restrict it to only being used by players (?)
+			is_ai = no
+		}
+	}
+	immediate = {
+		owner = {
+			# Designate the country as having found the gravekeeper system
+			set_country_flag = LEX_GRAVEYARD_ENCOUNTERED
+		}
+		# Probably want to conclude the event chain when I get around to that
+	}
+	option = {
+		name = "lex_gravekeeper.2.reactivate"
+		# This option places a special project on the station
+		# Uses the save_global_event_target in LEX_GRAVEKEEPER_INIT.txt
+		event_target:LEX_GRAVEKEEPER_REACTIVATE_TARGET = {
+			enable_special_project = {
+				# Special projects are defined in /common/special_projects
+				name = "LEX_GRAVEKEEPER_REACTIVATION"
+				location = THIS				# points to the event_target
+				owner = ROOT				# makes it accessible to the root owner of the ship
+			}
+		}
+	}
 }
 
 # Fires when the station reactivation special project completes
 # Spawns the gravekeeper
 ship_event = {
-    id = lex_gravekeeper.3
-    title = "lex_gravekeeper.3.name"
-    desc = "lex_gravekeeper.3.desc"
-    picture = GFX_evt_sapient_AI
-    show_sound = event_activating_unknown_technology
-    location = THIS
-
-    is_triggered_only = yes
-
-    trigger = {
-        NOT = {
-            # Does not fire if the station is active
-            # At this point this is an optimization thing, to avoid executing the event
-            has_global_flag = LEX_GRAVEKEEPER_AWAKE
-        }
-    }
-
-    # Dialogue box with recognition option
-    option = {
-        name = "lex_gravekeeper.3.recognize"
-        custom_tooltip = "lex_gravekeeper.3.recognize.tooltip"
-        set_global_flag = LEX_GRAVEKEEPER_AWAKE
-
-        # Award the ship owner with some research points for successfully reactivating the station
-        owner = {
-            add_resource = {
-                physics_research = 10000
-                society_research = 10000
-                engineering_research = 10000
-            }
-        }
-
-        # Create the gravekeeper
-        hidden_effect = {
-            # Create a country to host the gravekeeper
-            create_country = {
-                name = "LEX_GRAVEKEEPER_COUNTRY_NAME"
-                # Type defines government, hostility, behavior, etc.
-                # Declaration found in /common/country_types/LEX_COUNTRY_TYPES.txt
-                type = LEX_GRAVEKEEPER_COUNTRY_PASSIVE
-                # Needs a flag for display on the fleet marker
-                flag = {
-                    icon = {
-                        category = "pointy"
-                        file = "flag_pointy_15.dds"
-                    }
-                    background = {
-                        category = "backgrounds"
-                        file = "00_solid.dds"
-                    }
-                    colors = {
-                        "dark_grey"
-                        "dark_grey"
-                        "null"
-                        "null"
-                    }
-                }
-                # Apply country modifiers
-                # The modifier is defined in /common/static_modifiers/LEX_STATIC_MODIFIERS.txt
-                effect ={
-                    if = {
-                        limit = {
-                            NOT = {
-                                has_modifier = LEX_GRAVEKEEPER_MODIFIER
-                            }
-                        }
-                        add_modifier = {
-                            modifier = LEX_GRAVEKEEPER_MODIFIER
-                            days = -1
-                        }
-                    }
-                    # Mark it for reference and selection
-                    save_global_event_target_as = LEX_GRAVEKEEPER_COUNTRY
-                    set_country_flag = LEX_GRAVEKEEPER_COUNTRY
-                    set_graphical_culture = fallen_empire_04
-                }
-            }
-            # Create the fleet containing the gravekeeper
-            create_fleet = {
-                name = "LEX_GRAVEKEEPER"
-                settings = {
-                    # Doesn't leave a corpse (?)
-                    spawn_debris = no
-                    # Marks the fleet as a Leviathan
-                    is_boss = yes
-                }
-                # Effect executed on fleet creation
-                effect = {
-                    # Assign the fleet to the country we just made
-                    set_owner = event_target:LEX_GRAVEKEEPER_COUNTRY
-                    # Create the gravekeeper ship within the fleet
-                    create_ship = {
-                        name = "LEX_GRAVEKEEPER_SHIP_NAME"
-                        # Ship designs are stored in /common/global_ship_designs/LEX_GRAVEKEEPER_SHIP_DESIGNS.txt
-                        # Ship stats are found in /common/ship_sizes/LEX_GRAVE_SHIPS.txt
-                        design = "LEX_GRAVEKEEPER_STATION_SHIP_DESIGN"
-                        graphical_culture = "fallen_empire_04"
-                        prefix = no
-                        
-                        # Apply an effect that disables the ship when it reaches 5% of its maximum health
-                        effect = {
-                            set_disable_at_health = 0.05
-                        }
-                    }
-                    set_location = event_target:LEX_GRAVEKEEPER_REACTIVATE_TARGET
-                    save_global_event_target_as = LEX_GRAVEKEEPER_REACTIVATION_LOCATION
-                }
-            }
-            # Make an animation to spawn it in
-            last_created_fleet = {
-                bwm_effect_explosion_1 = yes
-                # Debug statement logs/game.log
-            }
-            # Alert every country in the galaxy to the gravekeeper's activation
-            every_country = {
-                establish_communications_no_message = event_target:LEX_GRAVEKEEPER_COUNTRY
-            }
-            # Remove the inactive station model
-            event_target:LEX_GRAVEKEEPER_REACTIVATE_TARGET = { destroy_ambient_object = this }
-            # Trigger the powerup sequence for the station to become mobile
-            owner = {
-                country_event = { 
-                    id = lex_gravekeeper.100
-                    # days = 10
-                }
-            }
-        }
-    }
+	id = lex_gravekeeper.3
+	title = "lex_gravekeeper.3.name"
+	desc = "lex_gravekeeper.3.desc"
+	picture = GFX_evt_sapient_AI
+	show_sound = event_activating_unknown_technology
+	location = THIS
+	is_triggered_only = yes
+	trigger = {
+		NOT = {
+			# Does not fire if the station is active
+			# At this point this is an optimization thing, to avoid executing the event
+			has_global_flag = LEX_GRAVEKEEPER_AWAKE
+		}
+	}
+	# Dialogue box with recognition option
+	option = {
+		name = "lex_gravekeeper.3.recognize"
+		custom_tooltip = "lex_gravekeeper.3.recognize.tooltip"
+		set_global_flag = LEX_GRAVEKEEPER_AWAKE
+		# Award the ship owner with some research points for successfully reactivating the station
+		owner = {
+			add_resource = {
+				physics_research = 10000
+				society_research = 10000
+				engineering_research = 10000
+			}
+		}
+		# Create the gravekeeper
+		hidden_effect = {
+			# Create a country to host the gravekeeper
+			create_country = {
+				name = "LEX_GRAVEKEEPER_COUNTRY_NAME"
+				# Type defines government, hostility, behavior, etc.
+				# Declaration found in /common/country_types/LEX_COUNTRY_TYPES.txt
+				type = LEX_GRAVEKEEPER_COUNTRY_PASSIVE
+				# Needs a flag for display on the fleet marker
+				flag = {
+					icon = {
+						category = "pointy"
+						file = "flag_pointy_15.dds"
+					}
+					background = {
+						category = "backgrounds"
+						file = "00_solid.dds"
+					}
+					colors = {
+						"dark_grey"
+						"dark_grey"
+						"null"
+						"null"
+					}
+				}
+				# Apply country modifiers
+				# The modifier is defined in /common/static_modifiers/LEX_STATIC_MODIFIERS.txt
+				effect = {
+					if = {
+						limit = {
+							NOT = {
+								has_modifier = LEX_GRAVEKEEPER_MODIFIER
+							}
+						}
+						add_modifier = {
+							modifier = LEX_GRAVEKEEPER_MODIFIER
+							days = -1
+						}
+					}
+					# Mark it for reference and selection
+					save_global_event_target_as = LEX_GRAVEKEEPER_COUNTRY
+					set_country_flag = LEX_GRAVEKEEPER_COUNTRY
+					set_graphical_culture = fallen_empire_04
+				}
+			}
+			# Create the fleet containing the gravekeeper
+			create_fleet = {
+				name = "LEX_GRAVEKEEPER"
+				settings = {
+					# Doesn't leave a corpse (?)
+					spawn_debris = no
+					# Marks the fleet as a Leviathan
+					is_boss = yes
+				}
+				# Effect executed on fleet creation
+				effect = {
+					# Assign the fleet to the country we just made
+					set_owner = event_target:LEX_GRAVEKEEPER_COUNTRY
+					# Create the gravekeeper ship within the fleet
+					create_ship = {
+						name = "LEX_GRAVEKEEPER_SHIP_NAME"
+						# Ship designs are stored in /common/global_ship_designs/LEX_GRAVEKEEPER_SHIP_DESIGNS.txt
+						# Ship stats are found in /common/ship_sizes/LEX_GRAVE_SHIPS.txt
+						design = "LEX_GRAVEKEEPER_STATION_SHIP_DESIGN"
+						graphical_culture = "fallen_empire_04"
+						prefix = no
+						# Apply an effect that disables the ship when it reaches 5% of its maximum health
+						effect = {
+							set_disable_at_health = 0.05
+						}
+					}
+					set_location = event_target:LEX_GRAVEKEEPER_REACTIVATE_TARGET
+					save_global_event_target_as = LEX_GRAVEKEEPER_REACTIVATION_LOCATION
+				}
+			}
+			# Make an animation to spawn it in
+			last_created_fleet = {
+				bwm_effect_explosion_1 = yes
+				# Debug statement logs/game.log
+			}
+			# Alert every country in the galaxy to the gravekeeper's activation
+			every_country = {
+				establish_communications_no_message = event_target:LEX_GRAVEKEEPER_COUNTRY
+			}
+			# Remove the inactive station model
+			event_target:LEX_GRAVEKEEPER_REACTIVATE_TARGET = {
+				destroy_ambient_object = this
+			}
+			# Trigger the powerup sequence for the station to become mobile
+			owner = {
+				country_event = {
+					id = lex_gravekeeper.100
+					# days = 10
+				}
+			}
+		}
+	}
 }
 
 # Middle step event to alert the science ship owner to the awakening
 country_event = {
-    id = lex_gravekeeper.100
-    title = "LEX_GRAVEKEEPER.100.name"
-    desc = "LEX_GRAVEKEEPER.100.desc"
-    picture = GFX_evt_sapient_AI
-    location = FROM
-
-    is_triggered_only = yes
-
-    option = {
-        name = "LEX_GRAVEKEEPER.100.afraid"
-        custom_tooltip = "LEX_GRAVEKEEPER.100.afraid.tooltip"
-        # Scientist realizes and becomes evasive
-        FROM.fleet = {
-            queue_actions = {
-                find_closest_system = {
-                    found_system = {
-                        move_to = this
-                    }   
-                }
-            }
-        }
-        hidden_effect = {
-            country_event = {
-                id = lex_gravekeeper.101
-                days = 45
-            }
-        }
-    }   
+	id = lex_gravekeeper.100
+	title = "LEX_GRAVEKEEPER.100.name"
+	desc = "LEX_GRAVEKEEPER.100.desc"
+	picture = GFX_evt_mysterious_signal
+	location = FROM
+	is_triggered_only = yes
+	option = {
+		name = "LEX_GRAVEKEEPER.100.afraid"
+		custom_tooltip = "LEX_GRAVEKEEPER.100.afraid.tooltip"
+		# Scientist realizes and becomes evasive
+		FROM.fleet = {
+			queue_actions = {
+				find_closest_system = {
+					found_system = {
+						move_to = this
+					}
+				}
+			}
+		}
+		hidden_effect = {
+			country_event = {
+				id = lex_gravekeeper.101
+				days = 60
+			}
+		}
+	}
 }
 
 # 45 days later, the station is replaced by a ship, and becomes hostile
 country_event = {
-    id = lex_gravekeeper.101
-    title = "LEX_GRAVEKEEPER.101.name"
-    desc = "LEX_GRAVEKEEPER.101.desc"
-    picture = GFX_evt_sapient_AI
-    show_sound = event_red_alert
-    location = FROM
-    
-    is_triggered_only = yes
-
-    immediate = {
-        every_country = {
-            limit = {
-                is_country_type = LEX_GRAVEKEEPER_COUNTRY_PASSIVE
-            }
-            set_country_type = LEX_GRAVEKEEPER_COUNTRY_AGGRESSIVE
-        }
-    }
-
-    option = {
-        name = "LEX_GRAVEKEEPER.101.run"
-        custom_tooltip = "LEX_GRAVEKEEPER.101.run.tooltip"
-    }
+	id = lex_gravekeeper.101
+	title = "LEX_GRAVEKEEPER.101.name"
+	desc = "LEX_GRAVEKEEPER.101.desc"
+	picture = GFX_evt_sapient_AI
+	show_sound = event_red_alert
+	location = FROM
+	is_triggered_only = yes
+	immediate = {
+		every_country = {
+			limit = {
+				is_country_type = LEX_GRAVEKEEPER_COUNTRY_PASSIVE
+			}
+			set_country_type = LEX_GRAVEKEEPER_COUNTRY_AGGRESSIVE
+		}
+	}
+	option = {
+		name = "LEX_GRAVEKEEPER.101.run"
+		custom_tooltip = "LEX_GRAVEKEEPER.101.run.tooltip"
+	}
 }
 
+# ==============================================================================
 # After the station is disabled (on_actions), the gravekeeper comes fully online
 ship_event = {
-    id = lex_gravekeeper.200
-    hide_window = yes
-
+	id = lex_gravekeeper.200
+	hide_window = yes
 	fire_only_once = yes
-    is_triggered_only = yes
-
-    # Ship needs to be the gravekeeper
-    trigger = {
-        is_ship_size = LEX_GRAVEKEEPER
-        OWNER = {
-            OR = {
-                is_country_type = LEX_GRAVEKEEPER_COUNTRY_PASSIVE
-                is_country_type = LEX_GRAVEKEEPER_COUNTRY_AGGRESSIVE
-            }
-            has_country_flag = LEX_GRAVEKEEPER_COUNTRY
-        }
-    }
-
-    immediate = {
-        create_fleet = {
-            name = "LEX_GRAVEKEEPER_AWAKENED"
-            settings = {
-                # Doesn't leave a corpse (?)
-                spawn_debris = no
-                # Marks the fleet as a Leviathan
-                is_boss = yes
-            }
-            # Effect executed on fleet creation
-            effect = {
-                # Assign the fleet to the gravekeeper country
-                set_owner = event_target:LEX_GRAVEKEEPER_COUNTRY
-                # Create the awakened gravekeeper
-                create_ship = {
-                    name = "LEX_GRAVEKEEPER_AWAKENED_SHIP_NAME"
-                    design = "LEX_GRAVEKEEPER_AWAKENED_SHIP_DESIGN"
-                    graphical_culture = "fallen_empire_04"
-                    prefix = no
-
-                    effect = {
-                        set_disable_at_health = 0.05
-                    }
-                }
-                set_location = event_target:LEX_GRAVEKEEPER_REACTIVATION_LOCATION
-                set_fleet_stance = aggressive
-                set_aggro_range_measure_from = self
-                set_aggro_range = 50
-				this.owner = {
-					set_country_flag = "GRAVEKEEPER_SLAIN"
+	is_triggered_only = yes
+	# Ship needs to be the gravekeeper
+	trigger = {
+		is_ship_size = LEX_GRAVEKEEPER
+		OWNER = {
+			OR = {
+				is_country_type = LEX_GRAVEKEEPER_COUNTRY_PASSIVE
+				is_country_type = LEX_GRAVEKEEPER_COUNTRY_AGGRESSIVE
+			}
+			has_country_flag = LEX_GRAVEKEEPER_COUNTRY
+		}
+	}
+	immediate = {
+		create_fleet = {
+			name = "LEX_GRAVEKEEPER_AWAKENED"
+			settings = {
+				# Doesn't leave a corpse (?)
+				spawn_debris = no
+				# Marks the fleet as a Leviathan
+				is_boss = yes
+			}
+			# Effect executed on fleet creation
+			effect = {
+				# Assign the fleet to the gravekeeper country
+				set_owner = event_target:LEX_GRAVEKEEPER_COUNTRY
+				# Create the awakened gravekeeper
+				create_ship = {
+					name = "LEX_GRAVEKEEPER_AWAKENED_SHIP_NAME"
+					design = "LEX_GRAVEKEEPER_AWAKENED_SHIP_DESIGN"
+					graphical_culture = "fallen_empire_04"
+					prefix = no
+					effect = {
+						set_disable_at_health = 0.05
+					}
 				}
-            }
-        }
-    }
+				set_location = event_target:LEX_GRAVEKEEPER_REACTIVATION_LOCATION
+				set_fleet_stance = aggressive
+				set_aggro_range_measure_from = self
+				set_aggro_range = 50
+				# Patrolling the home system actions
+				queue_actions = {
+					# Make it loop until an instruction is impossible
+					# The aggressive behavior will ensure it fights nearby enemies which interrupts but doesn't stop this queue
+					repeat = {
+						# Search for the first planet, it was tagged in /events/LEX_GRAVEKEEPER_INIT
+						find_closest_planet = {
+							trigger = {
+								# Restrictive conditions
+								id = LEX_GRAVEKEEPER_AWAKENED_PATROL.1
+								has_planet_flag = LEX_GRAVEKEEPER_PATROL_1
+							}
+							# If a planet is found, do this
+							found_planet = {
+								# Move to this planet
+								orbit_planet = this
+								# Pause for a month, then move on
+								wait = {
+									duration = 30
+								}
+							}
+						}
+						# Search for the second planet, it was tagged in /events/LEX_GRAVEKEEPER_INIT
+						find_closest_planet = {
+							trigger = {
+								# Restrictive conditions
+								id = LEX_GRAVEKEEPER_AWAKENED_PATROL.2
+								has_planet_flag = LEX_GRAVEKEEPER_PATROL_2
+							}
+							found_planet = {
+								# Move to this planet
+								orbit_planet = this
+								# Pause for a month, then move on
+								wait = {
+									duration = 30
+								}
+							}
+						}
+						# Search for the third planet, it was tagged in /events/LEX_GRAVEKEEPER_INIT
+						find_closest_planet = {
+							trigger = {
+								# Restrictive conditions
+								id = LEX_GRAVEKEEPER_AWAKENED_PATROL.3
+								has_planet_flag = LEX_GRAVEKEEPER_PATROL_3
+							}
+							found_planet = {
+								# Move to this planet
+								orbit_planet = this
+								# Pause for a month, then move on
+								wait = {
+									duration = 30
+								}
+							}
+						}
+						# Search for the fourth planet, it was tagged in /events/LEX_GRAVEKEEPER_INIT
+						find_closest_planet = {
+							trigger = {
+								# Restrictive conditions
+								id = LEX_GRAVEKEEPER_AWAKENED_PATROL.4
+								has_planet_flag = LEX_GRAVEKEEPER_PATROL_4
+							}
+							found_planet = {
+								# Move to this planet
+								orbit_planet = this
+								# Pause for a month, then move on
+								wait = {
+									duration = 30
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+		# Flashbang the player
+		last_created_fleet = {
+			bwm_effect_explosion_2 = yes
+		}
+		# This is outside the create_fleet, and deletes the original station ship
+		fleet = {
+			delete_fleet = this
+		}
+		# Remember:
+		# When a ship is disabled, check these events
+		# This = Ship
+		# From = Disabler Ship
+		FROM = {
+			OWNER = {
+				set_country_flag = LEX_GRAVEKEEPER_ANGERED
+				country_event = {
+					id = lex_gravekeeper.201
+				}
+			}
+		}
+	}
 }
 
+# Alert players to the aggressive stance of the gravekeeper
+country_event = {
+	id = lex_gravekeeper.201
+	title = "LEX_GRAVEKEEPER.201.name"
+	desc = "LEX_GRAVEKEEPER.201.desc"
+	picture = GFX_evt_ruined_system
+	show_sound = event_red_alert
+	location = event_target:LEX_GRAVEYARD_STAR
+	is_triggered_only = yes
+	# Fight starts again instantly, lasts until 
+	option = {
+		name = "LEX_GRAVEKEEPER.201.fight"
+	}
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# Story beat fired upon 25% reactivation of the gravekeeper
+# =====================================================================================
+# When the aggressive gravekeeper is disabled, warp it to a random system in the galaxy
 ship_event = {
-    id = lex_gravekeeper.10001
-    title = "lex_gravekeeper.10001.name"
-    desc = "lex_gravekeeper.10001.desc"
-    picture = GFX_evt_space_station
-    location = FROM
-
-    is_triggered_only = yes
-
-    option = {
-        name = "lex_gravekeeper.10001.reactivate"
-    }
+	id = lex_gravekeeper.300
+	hide_window = yes
+	# It seems like this is checked only periodically, and any ships which did damage between the on_action checks can be counted
+	# This results in one fire per disa
+	fire_only_once = yes
+	is_triggered_only = yes
+	# Want to select the gravekeeper
+	trigger = {
+		is_ship_size = LEX_GRAVEKEEPER_AWAKENED
+	}
+	# Save the gravekeeper
+	immediate = {
+		# Target the ship
+		THIS = {
+			# In the solar system
+			solar_system = {
+				# Set a home point for the gravekeeper
+				save_global_event_target_as = LEX_GRAVEKEEPER_HOME
+				save_global_event_target_as = sfex_measure_num_jumps_to_source
+				# Select the star
+				random_system_planet = {
+					limit = {
+						is_star = yes
+					}
+					set_planet_flag = LEX_GRAVEKEEPER_RETURN_POINT
+					# And flashbang the player again :)
+					bwm_effect_explosion_2 = yes
+				}
+				# Exhaust the sun's power to teleport the gravekeeper
+				set_star_class = sc_m_giant
+			}
+			# Pick a random rim system
+			random_rim_system = {
+				limit = {
+					# # That is at least 10 jumps away
+					distance = {
+						# From this initial system
+						source = event_target:LEX_GRAVEKEEPER_HOME
+						min_jumps = 10
+						# Using hyperlanes and not euclidean distance
+						type = hyperlane
+						# Without including wormhole/gate travel
+						use_bypasses = no
+						# Make sure this is galactic distance
+						same_solar_system = no
+					}
+				}
+				save_event_target_as = LEX_GRAVEKEEPER_ESCAPE_LOCATION
+				random_system_planet = {
+					limit = {
+						is_star = yes
+					}
+					set_planet_flag = LEX_GRAVEKEEPER_ESCAPE_POINT
+				}
+				set_name = "LEX_GRAVEKEEPER_ESCAPE"
+			}
+			# And put the gravekeeper there
+			THIS.fleet = {
+				set_location = event_target:LEX_GRAVEKEEPER_ESCAPE_LOCATION
+				# Exit combat
+				clear_fleet_actions = this
+				# Remove the last patrol action that went through
+				clear_orders = yes
+				# Reenable the ship to let it regenerate
+				every_owned_ship = {
+					set_disabled = no
+				}
+				# Make the gravekeeper rest for 3 years
+				set_timed_fleet_flag = {
+					flag = LEX_GRAVEKEEPER_RESTING
+					days = 1080
+				}
+				# Create its next orders in a new event
+				# fleet_event = {
+				# 	id = lex_gravekeeper.302
+				# }
+			}
+			# Save the location globally for tracking in the future
+			THIS.solar_system = {
+				save_global_event_target_as = LEX_GRAVEKEEPER_CURRENT_LOCATION
+			}
+		}
+		# Alert the player who killed it to how it survived
+		FROM = {
+			OWNER = {
+				country_event = {
+					id = lex_gravekeeper.301
+				}
+			}
+		}
+	}
 }
 
-# Story beat fired upon 50% reactivation of the gravekeeper
-ship_event = {
-    id = lex_gravekeeper.10002
-    title = "lex_gravekeeper.10002.name"
-    desc = "lex_gravekeeper.10002.desc"
-    picture = GFX_evt_space_station
-    location = FROM
-
-    is_triggered_only = yes
-
-    option = {
-        name = "lex_gravekeeper.10002.reactivate"
-    }
+# Gravekeeper disappeared...?
+country_event = {
+	id = lex_gravekeeper.301
+	title = "LEX_GRAVEKEEPER.301.name"
+	desc = "LEX_GRAVEKEEPER.301.desc"
+	is_triggered_only = yes
+	picture = GFX_evt_large_explosion
+	show_sound = event_ship_explosion
+	location = event_target:LEX_GRAVEYARD_STAR
+	option = {
+		name = "LEX_GRAVEKEEPER.301.disappeared"
+		country_event = {
+			id = lex_gravekeeper.302
+		}
+	}
 }
 
-# Story beat fired upon 75% reactivation of the gravekeeper
-ship_event = {
-    id = lex_gravekeeper.10003
-    title = "lex_gravekeeper.10003.name"
-    desc = "lex_gravekeeper.10003.desc"
-    picture = GFX_evt_space_station
-    location = FROM
-
-    is_triggered_only = yes
-
-    option = {
-        name = "lex_gravekeeper.10003.reactivate"
-    }
+# Track the gravekeeper
+country_event = {
+	id = lex_gravekeeper.302
+	title = "LEX_GRAVEKEEPER.302.name"
+	desc = "LEX_GRAVEKEEPER.302.desc"
+	is_triggered_only = yes
+	picture = GFX_evt_ancient_databank
+	# Track the gravekeeper
+	option = {
+		name = "LEX_GRAVEKEEPER.302.track"
+		THIS = {
+			set_country_flag = LEX_GRAVEKEEPER_TRACKER
+		}
+		# Create a POI for the situation log
+		create_point_of_interest = {
+			id = LEX_GRAVEKEEPER_TRACKING_POINT
+			name = "LEX_GRAVEKEEPER_TRACKING_POINT.name"
+			desc = "LEX_GRAVEKEEPER_TRACKING_POINT.desc"
+			event_chain = LEX_GRAVEKEEPER_TRACKING_CHAIN
+			category = LEX_GRAVEKEEPER_TRACKING_CHAIN
+			location = event_target:LEX_GRAVEKEEPER_CURRENT_LOCATION
+		}
+		# Calculate POI distance from gravekeeper home system
+		# First scope to the POI
+		# In this case it is FROMFROM
+		hidden_effect = {
+			FROMFROM = {
+				solar_system = {
+					# Use OldEnt's distance bucketing script to range the system
+					sfex_jumpdrive_order_measure_num_jumps_to_source = {
+					}
+					# Value is saved in variable: sfex_jumpdrive_order_var_num_jumps_to_source_use_bypasses_no
+					# Will have to scope down to the ship in the future
+					# Save it to a global variable
+					# no_scope = {
+					# 	set_variable = {
+					# 		which = LEX_GRAVEKEEPER_DISTANCE_FROM_HOME
+					# 		value = sfex_jumpdrive_order_var_num_jumps_to_source_use_bypasses_no
+					# 	}
+					# }
+				}
+			}
+		}
+	}
+	# Do nothing and hope it doesn't come back
+	option = {
+		name = "LEX_GRAVEKEEPER.302.ignore"
+		custom_tooltip = "LEX_GRAVEKEEPER.302.ignore.tooltip"
+	}
 }
-
-# Activation of the gravekeeper
