@@ -569,19 +569,12 @@ country_event = {
 		# In this case it is FROMFROM
 		hidden_effect = {
 			FROMFROM = {
+				# Scope to the solar system to make scoping to the variable easier in the future
 				solar_system = {
 					# Use OldEnt's distance bucketing script to range the system
 					sfex_jumpdrive_order_measure_num_jumps_to_source = {
 					}
 					# Value is saved in variable: sfex_jumpdrive_order_var_num_jumps_to_source_use_bypasses_no
-					# Will have to scope down to the ship in the future
-					# Save it to a global variable
-					# no_scope = {
-					# 	set_variable = {
-					# 		which = LEX_GRAVEKEEPER_DISTANCE_FROM_HOME
-					# 		value = sfex_jumpdrive_order_var_num_jumps_to_source_use_bypasses_no
-					# 	}
-					# }
 				}
 			}
 		}
@@ -592,3 +585,5 @@ country_event = {
 		custom_tooltip = "LEX_GRAVEKEEPER.302.ignore.tooltip"
 	}
 }
+
+
