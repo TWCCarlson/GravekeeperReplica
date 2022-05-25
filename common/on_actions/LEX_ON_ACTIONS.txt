@@ -34,6 +34,7 @@ on_ship_disabled = {
 # From = System
 on_entering_system_fleet = {
 	events = {
-		lex_gravekeeper.400
+		lex_gravekeeper.304
+		lex_gravekeeper.401
 	}
 }

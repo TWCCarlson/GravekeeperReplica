@@ -405,7 +405,6 @@ ship_event = {
 		# From = Disabler Ship
 		FROM = {
 			OWNER = {
-				set_country_flag = LEX_GRAVEKEEPER_ANGERED
 				country_event = {
 					id = lex_gravekeeper.201
 				}
@@ -500,14 +499,19 @@ ship_event = {
 					set_disabled = no
 				}
 				# Make the gravekeeper rest for 3 years
-				set_timed_fleet_flag = {
-					flag = LEX_GRAVEKEEPER_RESTING
-					days = 1080
+				queue_actions = {
+					find_closest_planet = {
+						found_planet = {
+							orbit_planet = this
+							wait = 90
+						}
+					}
 				}
 				# Create its next orders in a new event
-				# fleet_event = {
-				# 	id = lex_gravekeeper.302
-				# }
+				fleet_event = {
+					id = lex_gravekeeper.400
+					days = 90
+				}
 			}
 			# Save the location globally for tracking in the future
 			THIS.solar_system = {
@@ -517,6 +521,8 @@ ship_event = {
 		# Alert the player who killed it to how it survived
 		FROM = {
 			OWNER = {
+				# set_country_flag = LEX_GRAVEKEEPER_ANGERED
+				save_global_event_target_as = LEX_GRAVEKEEPER_SLAYER
 				country_event = {
 					id = lex_gravekeeper.301
 				}
@@ -586,4 +592,137 @@ country_event = {
 	}
 }
 
+# Alert the player that the gravekeeper is moving again
+country_event = {
+	id = lex_gravekeeper.303
+	title = "LEX_GRAVEKEEPER.303.name"
+	desc = "LEX_GRAVEKEEPER.303.desc"
+	fire_only_once = yes
+	is_triggered_only = yes
+	picture = GFX_evt_gray_goo_ships
+	# Only alert the gravekeeper tracker
+	trigger = {
+		has_country_flag = LEX_GRAVEKEEPER_TRACKER
+	}
+	option = {
+		name = "LEX_GRAVEKEEPER.303.comingback"
+	}
+}
 
+# Update the tracker when the gravekeeper moves
+# Use the on_entering_system_fleet on_action and limit it with triggers to the gravekeeper fleet
+fleet_event = {
+	id = lex_gravekeeper.304
+	hide_window = yes
+	is_triggered_only = yes
+	# Only track the gravekeeper
+	# Shouldn't be necessary 
+	trigger = {
+		any_owned_ship = {
+			is_ship_size = LEX_GRAVEKEEPER_AWAKENED
+		}
+	}
+	immediate = {
+		# Save the location globally for tracking in the future
+		THIS.solar_system = {
+			save_global_event_target_as = LEX_GRAVEKEEPER_CURRENT_LOCATION
+			# Recalculate the distance
+			# Scope to the solar system to make scoping to the variable easier in the future
+			# Use OldEnt's distance bucketing script to range the system
+			sfex_jumpdrive_order_measure_num_jumps_to_source = {
+			}
+			# Value is saved in variable: sfex_jumpdrive_order_var_num_jumps_to_source_use_bypasses_no
+		}
+		# Then call event for updating the situation log
+		# Exit fleet scope to search for the right country
+		no_scope = {
+			country_event = {
+				id = lex_gravekeeper.305
+			}
+		}
+	}
+}
+
+# Update the situation log after the gravekeeper updates its location
+country_event = {
+	id = lex_gravekeeper.305
+	hide_window = yes
+	is_triggered_only = yes
+	# Make sure its the right country
+	trigger = {
+		has_country_flag = LEX_GRAVEKEEPER_TRACKER
+	}
+	immediate = {
+		# Remove the old point of interest
+		remove_point_of_interest = LEX_GRAVEKEEPER_TRACKING_POINT
+		# Create a new POI for the situation log
+		create_point_of_interest = {
+			id = LEX_GRAVEKEEPER_TRACKING_POINT
+			name = "LEX_GRAVEKEEPER_TRACKING_POINT.name"
+			desc = "LEX_GRAVEKEEPER_TRACKING_POINT.desc"
+			event_chain = LEX_GRAVEKEEPER_TRACKING_CHAIN
+			category = LEX_GRAVEKEEPER_TRACKING_CHAIN
+			location = event_target:LEX_GRAVEKEEPER_CURRENT_LOCATION
+		}
+	}
+}
+
+# ===========================
+# Start moving closer to home
+fleet_event = {
+	id = lex_gravekeeper.400
+	hide_window = yes
+	is_triggered_only = yes
+	# Make sure its the right fleet
+	trigger = {
+		any_owned_ship = {
+			is_ship_size = LEX_GRAVEKEEPER_AWAKENED
+		}
+	}
+	immediate = {
+		queue_actions = {
+			move_to = event_target:LEX_GRAVEKEEPER_HOME
+		}
+		event_target:LEX_GRAVEKEEPER_SLAYER = {
+			country_event = {
+				id = lex_gravekeeper.303
+			}
+		}
+	}
+}
+
+# On entering a new system, rest at the star
+fleet_event = {
+	id = lex_gravekeeper.401
+	hide_window = yes
+	is_triggered_only = yes
+	# Make sure its the right fleet
+	trigger = {
+		any_owned_ship = {
+			is_ship_size = LEX_GRAVEKEEPER_AWAKENED
+		}
+	}
+	immediate = {
+		# Reset instructions
+		clear_fleet_actions = this
+		clear_orders = yes
+		# Locate the star in the system and tag it
+		solar_system = {
+			random_system_planet = {
+				limit = {
+					is_star = yes
+				}
+				save_global_event_target_as = LEX_GRAVEKEEPER_RESTPOINT
+			}
+		}
+		# Move to the star
+		queue_actions = {
+			move_to = event_target:LEX_GRAVEKEEPER_RESTPOINT
+		}
+		# Wait a bit, then continue moving
+		fleet_event = {
+			id = lex_gravekeeper.400
+			days = 90
+		}
+	}
+}
